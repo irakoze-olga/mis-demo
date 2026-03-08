@@ -1,0 +1,75 @@
+@import './variables.css';
+
+/* App Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.05) 0px, transparent 50%);
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  position: relative;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll from children */
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-collapsed);
+  padding: var(--space-md);
+  overflow-y: auto;
+  min-width: 0;
+  /* Allow flex child to shrink below content size */
+  min-height: calc(100vh - var(--header-height));
+  transition: var(--transition);
+}
+
+/* Responsive Layout */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: var(--space-sm);
+  }
+}
+
+/* Loading States */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
