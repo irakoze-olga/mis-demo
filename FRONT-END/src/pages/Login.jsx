@@ -34,8 +34,8 @@ const Login = () => {
       </div>
       <div className="login-card card">
         <div className="login-header">
-          <h1 className="login-title">Login to MIS</h1>
-          <p className="login-subtitle">Enter your credentials to access the dashboard</p>
+          <h1 className="login-title">Login to MIS Dash</h1>
+          <p className="login-subtitle">Enter your credentials to access the MIS Dash</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -81,6 +81,10 @@ const Login = () => {
           </button>
         </form>
 
+        <div className="login-footer">
+          <p>Don't have an account? <Link to="/signup" className="text-primary font-bold">Sign up here</Link></p>
+        </div>
+
         <p className="login-hint">
           Demo: Enter any username to proceed.
         </p>
@@ -88,6 +92,24 @@ const Login = () => {
           <ArrowLeft size={16} /> Back to home
         </Link>
       </div>
+      <style>{`
+        .login-footer {
+          margin-top: 1.5rem;
+          text-align: center;
+          font-size: 0.9rem;
+          color: var(--text-muted);
+        }
+        .text-primary {
+          color: var(--primary);
+          text-decoration: none;
+        }
+        .text-primary:hover {
+          text-decoration: underline;
+        }
+        .font-bold {
+          font-weight: 700;
+        }
+      `}</style>
     </div>
   );
 };

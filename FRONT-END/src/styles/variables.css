@@ -60,7 +60,7 @@
 
   /* Layout */
   --sidebar-width: 260px;
-  --sidebar-collapsed: 80px;
+  --sidebar-collapsed: 72px;
   --header-height: 72px;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -1,46 +1,76 @@
 import React, { useState } from 'react';
+import { ChevronUp, ChevronDown, Eye, Edit, Trash2 } from 'lucide-react';
 import '../../styles/components.css';
 
-const DataTable = ({ title, data, columns, pageSize = 3 }) => {
+const DataTable = ({ title, data, columns, onAction }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(data.length / pageSize);
+  const [pageSize] = useState(5);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  const handleExportCSV = () => {
-    const headers = columns.map(c => c.header).join(',');
-    const rows = data.map(row => columns.map(c => JSON.stringify(row[c.accessor] ?? '')).join(','));
-    const csv = [headers, ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${title.replace(/\s+/g, '-')}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+  // Sorting
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
 
-  const handlePrev = () => {
-    setCurrentPage(prev => Math.max(prev - 1, 1));
-  };
+  const sortedData = React.useMemo(() => {
+    if (!sortConfig.key) return data;
 
-  const handleNext = () => {
-    setCurrentPage(prev => Math.min(prev + 1, totalPages));
-  };
+    return [...data].sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [data, sortConfig]);
 
+  // Pagination
+  const totalPages = Math.ceil(sortedData.length / pageSize);
   const startIdx = (currentPage - 1) * pageSize;
-  const paginatedData = data.slice(startIdx, startIdx + pageSize);
+  const paginatedData = sortedData.slice(startIdx, startIdx + pageSize);
+
+  const handlePrev = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+  const handleNext = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+
+  const getSortIcon = (column) => {
+    if (sortConfig.key !== column.accessor) return null;
+    return sortConfig.direction === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />;
+  };
 
   return (
     <div className="data-table-container card flex-col">
       <div className="table-header flex justify-between items-center">
         <h3 className="card-title">{title}</h3>
-        <button className="btn btn-secondary" style={{ padding: '4px 12px', fontSize: '0.75rem' }} onClick={handleExportCSV}>Export CSV</button>
+        <div className="table-info text-sm text-muted">
+          {data.length} total items
+        </div>
       </div>
 
-      <div className="table-wrapper mt-lg">
+      <div className="table-wrapper">
         <table className="modern-table">
           <thead>
             <tr>
-              {columns.map((col, idx) => <th key={idx}>{col.header}</th>)}
+              {columns.map((col, i) => (
+                <th key={i}>
+                  {col.sortable ? (
+                    <button
+                      className="sort-button flex items-center gap-xs"
+                      onClick={() => handleSort(col.accessor)}
+                    >
+                      {col.header}
+                      {getSortIcon(col)}
+                    </button>
+                  ) : (
+                    col.header
+                  )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -52,6 +82,30 @@ const DataTable = ({ title, data, columns, pageSize = 3 }) => {
                       <span className={`badge badge-${row[col.accessor] === 'Active' ? 'success' : row[col.accessor] === 'Completed' ? 'primary' : 'warning'}`}>
                         {row[col.accessor]}
                       </span>
+                    ) : col.accessor === 'actions' ? (
+                      <div className="table-actions flex gap-xs">
+                        <button
+                          className="btn btn-sm btn-outline"
+                          onClick={() => onAction && onAction('view', row[col.accessor])}
+                          title="View project"
+                        >
+                          <Eye size={14} />
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline"
+                          onClick={() => onAction && onAction('edit', row[col.accessor])}
+                          title="Edit project"
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline btn-danger"
+                          onClick={() => onAction && onAction('delete', row[col.accessor])}
+                          title="Delete project"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     ) : row[col.accessor]}
                   </td>
                 ))}
@@ -68,14 +122,29 @@ const DataTable = ({ title, data, columns, pageSize = 3 }) => {
           <span className="font-bold">{Math.min(startIdx + pageSize, data.length)}</span> of {data.length}
         </span>
         <div className="pagination-buttons flex gap-sm">
-          <button className="btn btn-secondary" onClick={handlePrev} disabled={currentPage === 1}>Prev</button>
-          <button className="btn btn-primary" onClick={handleNext} disabled={currentPage === totalPages}>Next</button>
+          <button className="btn btn-secondary btn-sm" onClick={handlePrev} disabled={currentPage === 1}>Prev</button>
+          <button className="btn btn-primary btn-sm" onClick={handleNext} disabled={currentPage === totalPages}>Next</button>
         </div>
       </div>
 
       <style>{`
-        .table-wrapper { overflow-x: auto; }
-        .modern-table { width: 100%; border-collapse: collapse; }
+        .data-table-container {
+          padding: 1.5rem;
+        }
+        .table-header {
+          margin-bottom: 1.5rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid var(--border-color);
+        }
+        .table-wrapper { 
+          overflow-x: auto;
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+        }
+        .modern-table { 
+          width: 100%; 
+          border-collapse: collapse; 
+        }
         .modern-table th {
           text-align: left;
           padding: 12px 16px;
@@ -85,6 +154,22 @@ const DataTable = ({ title, data, columns, pageSize = 3 }) => {
           text-transform: uppercase;
           letter-spacing: 0.05em;
           border-bottom: 1px solid var(--border-color);
+          font-weight: 600;
+        }
+        .sort-button {
+          background: none;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font: inherit;
+          padding: 0;
+          transition: var(--transition);
+        }
+        .sort-button:hover {
+          color: var(--primary);
         }
         .modern-table td {
           padding: 16px;
@@ -96,6 +181,69 @@ const DataTable = ({ title, data, columns, pageSize = 3 }) => {
         }
         .modern-table tr:last-child td { border-bottom: none; }
         .modern-table tr:hover { background: rgba(99, 102, 241, 0.02); }
+        .table-actions {
+          opacity: 0;
+          transition: var(--transition);
+        }
+        .modern-table tr:hover .table-actions {
+          opacity: 1;
+        }
+        .btn-sm {
+          padding: 6px 10px;
+          font-size: 0.8rem;
+          border-radius: 6px;
+          min-width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .btn-danger {
+          color: var(--danger);
+          border-color: var(--danger);
+        }
+        .btn-danger:hover {
+          background: var(--danger);
+          color: white;
+        }
+        .badge {
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        .badge-success {
+          background: rgba(16, 185, 129, 0.1);
+          color: var(--success);
+        }
+        .badge-primary {
+          background: rgba(99, 102, 241, 0.1);
+          color: var(--primary);
+        }
+        .badge-warning {
+          background: rgba(245, 158, 11, 0.1);
+          color: var(--warning);
+        }
+        
+        @media (max-width: 768px) {
+          .table-wrapper {
+            overflow-x: scroll;
+          }
+          .modern-table th,
+          .modern-table td {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+          }
+          .table-actions {
+            opacity: 1;
+          }
+          .pagination {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+          }
+        }
       `}</style>
     </div>
   );

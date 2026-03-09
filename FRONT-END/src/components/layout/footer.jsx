@@ -31,6 +31,8 @@ const Footer = () => {
           background: var(--bg-card);
           border-top: 1px solid var(--border-color);
           margin-top: auto;
+          position: relative;
+          z-index: 10;
         }
         .footer-link {
           font-size: 0.8rem;

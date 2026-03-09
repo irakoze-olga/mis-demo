@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, Search, Sun, Moon, Camera } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/components.css';
 
 const Header = ({ user, onAvatarChange }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-  const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
 
   const handleAvatarUpload = (e) => {
     const file = e.target.files?.[0];
@@ -27,15 +28,7 @@ const Header = ({ user, onAvatarChange }) => {
   };
 
   const handleNotifications = () => {
-    setShowNotifications(prev => !prev);
-    if (!showNotifications) {
-      // Simple toast for demo
-      const toast = document.createElement('div');
-      toast.textContent = 'No new notifications';
-      toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--bg-card);padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-size:0.9rem;z-index:9999;border:1px solid var(--border-color)';
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2500);
-    }
+    navigate('/notifications');
   };
 
   return (
@@ -43,8 +36,12 @@ const Header = ({ user, onAvatarChange }) => {
       <div className="header-container flex items-center justify-between">
         <div className="header-brand flex items-center gap-md">
           <div className="logo flex items-center gap-sm">
-            <div className="logo-box">
-              <span className="logo-icon">M</span>
+            <div className="logo-box" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--primary)', background: 'transparent' }}>
+              <img
+                src="/fav-icons/mis.jpeg"
+                alt="MIS Dash"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
             </div>
             <h1 className="logo-text">MIS <span className="text-muted" style={{ fontWeight: 400 }}>Dash</span></h1>
           </div>
@@ -112,15 +109,23 @@ const Header = ({ user, onAvatarChange }) => {
         }
         .header-container { width: 100%; }
         .logo-box {
-          background: var(--grad-primary);
           color: white;
-          width: 32px;
-          height: 32px;
-          border-radius: 8px;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: 800;
+          border: 2px solid var(--primary);
+          background: transparent;
+          box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+          transition: all 0.3s ease;
+        }
+        .logo-box:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+          border-color: var(--primary-dark);
         }
         .logo-text { 
            margin: 0; 

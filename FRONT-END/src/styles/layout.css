@@ -26,14 +26,19 @@
   overflow-y: auto;
   min-width: 0;
   /* Allow flex child to shrink below content size */
-  min-height: calc(100vh - var(--header-height));
-  transition: var(--transition);
+  min-height: calc(100vh - var(--header-height) - 120px);
+  position: relative;
+  z-index: 5;
+}
+
+.sidebar:hover ~ .main-content {
+  margin-left: var(--sidebar-width);
 }
 
 /* Responsive Layout */
 @media (max-width: 1024px) {
   .main-content {
-    padding: var(--space-md);
+    padding: var(--space-lg);
   }
 }
 
