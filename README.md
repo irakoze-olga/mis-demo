@@ -291,13 +291,6 @@ Contributions are welcome and appreciated. MIS follows a standard Git-based work
 | Refactor | `refactor/name` | `refactor/grade-service-logic` |
 
 ---
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for full details.
-
----
-
 <div align="center">
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=2a6fdb,0b1628&height=100&section=footer&animation=fadeIn" />
