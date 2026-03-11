@@ -22,21 +22,6 @@
 
 ---
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Core Modules](#core-modules)
-- [User Roles](#user-roles)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Environment Variables](#environment-variables)
-- [Running Tests](#running-tests)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## Overview
 
 MIS is a robust school data management system built to centralize and automate the administrative operations of educational institutions. From enrollment and grading to staff payroll and performance reporting, MIS serves as the operational backbone of a modern school — eliminating fragmented spreadsheets and manual record-keeping.
