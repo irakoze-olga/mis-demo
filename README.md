@@ -67,16 +67,6 @@ Visual class schedule builder with conflict detection, room assignment, teacher 
 
 Institution-wide dashboards with drill-down capability, exportable PDF reports for parents, and data-driven insights for school leadership. Includes performance trends, attendance rates, and financial summaries.
 
-### 08 — Guardian Portal
-
-Secure parent and guardian access to their child's attendance record, grades, fee statements, and school announcements in real time. Accessible via web browser and mobile devices.
-
-### 09 — Notices and Communication
-
-Internal announcement broadcasting, event scheduling, and notification delivery to targeted user groups via in-app and email channels. Supports scheduled announcements and priority levels.
-
----
-
 ## User Roles
 
 | Role | Description | Key Permissions |
