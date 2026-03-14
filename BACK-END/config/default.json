@@ -1,0 +1,10 @@
+{
+  "server": {
+    "env": "development",
+    "port": 5000
+  },
+  "mongodb": {
+    "uri": "",
+    "options": {}
+  }
+}
