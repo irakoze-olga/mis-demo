@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=2A6FDB&center=true&vCenter=true&width=500&lines=MIS+System; +Scool+Data+Management;Built+for+Education" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=2A6FDB&center=true&vCenter=true&width=500&lines=MIS+System;+Scool+Data+Management;Built+for+Education" alt="Typing SVG" />
 
 <br/>
 
